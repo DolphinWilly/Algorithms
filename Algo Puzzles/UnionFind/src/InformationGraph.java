@@ -1,3 +1,4 @@
+import java.util.*;
 /**
  * There are n employees working in company "X" (let's number them from 1 to n for convenience). 
  * Initially the employees didn't have any relationships among each other. On each of m next days one of the following events took place:
@@ -24,10 +25,94 @@
  * For each query of the third type print "YES" if the employee signed the document package and "NO" otherwise.
  * Print all the words without the quotes.
 
- * @author Willy
+ * @author Willy (Weiyu Wang)
  *
+ *
+ * It worths to think about what is the dynamic part and what is the static part of this problem:
+ * Viewing employees as vertices and boss relation as an directed edge, we see whether two vertices are connected
+ * (in the sense of an undirected graph) is dynamic, it changes over the query; but with this connection property we just need a static 
+ * extra property to determine whether b is the box of a at a current point: whether in the final graph, b has a directed path to a
  */
 public class InformationGraph {
 	private int[] parent;
-	private int[] height; 
+	private int[] height;
+	public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in); 
+		int n = sc.nextInt(); // num of people/vertices
+		InformationGraph graph = new InformationGraph (n);
+		int q = sc.nextInt(); // num of queries
+		ArrayList<Boolean> connected = new ArrayList<Boolean>(); // dynamic property of connectedness at a given time
+		ArrayList<int[]> judgePair = new ArrayList<int[]>();
+		ArrayList<Integer> sign = new ArrayList<Integer> (); // which person receives the ith document
+		for(int j=1; j<=q; j++) {
+			int type = sc.nextInt();
+			if(type == 1) {
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+				graph.union(x, y);
+			}
+			else if(type == 2) {
+				int x = sc.nextInt();
+				sign.add(x);
+			}
+			else if(type == 3) {
+				int x = sc.nextInt();
+				int i = sc.nextInt();
+				connected.add(graph.connected(sign.get(i-1), x));
+				judgePair.add(new int[]{i-1,x});
+			}
+		}
+		// now we have the connectedness info, and just need a static final graph to find directed path
+		for(int j=0; j<connected.size(); j++) {
+			if(!connected.get(j)) // not connected
+				System.out.println("NO");
+			else {
+				
+			}
+		}
+	}
+	
+	public InformationGraph (int n) {
+		parent = new int[n];
+		height = new int[n];
+		for(int i=0; i<=n-1; i++) {
+			parent[i] = i;
+			height[i] = 0;
+		}
+	}
+	
+	public int find (int v) {
+		assert v>=0 && v<=parent.length; // v is actually in the graph
+		int root = v; // try to find the root of vertex v
+		while(root!=parent[root]) 
+			root = parent[root];
+		// now assigning the parent of each vertex in the path to be the root
+		while(v!=root) {
+			int next = parent[v];
+			parent[v] = root;
+			v = next;
+		}
+		return root;
+	}
+	
+	public boolean connected (int v, int w) {
+		return find(v) == find(w);
+	}
+	
+	public void union (int v, int w) {
+		int rootv = find(v);
+		int rootw = find(w);
+		if (rootv == rootw)
+			return; // v and w are already connected
+		// append the shorter tree to the taller tree
+		if(height[rootv] < height[rootw])
+			parent[rootv] = rootw;
+		else if(height[rootv] > height[rootw])
+			parent[rootw] = rootv;
+		else { // they are of equal height
+			parent[rootw] = rootv;
+			height[rootv] ++;
+		}
+		
+	}
 }
