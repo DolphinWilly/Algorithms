@@ -163,12 +163,15 @@ public class FrameworkFlow
 						Edge back = e.originalEdge;
 						back.capacity += choose;
 						ArrayList<Edge> add = aj.get(back.tailNode);
-						add.add(back);
+						System.out.println(add.contains(back));
+						if(!add.contains(back)) {
+							add.add(back);
+						}
 					} else { // e is backward edge
-						e.flow -= choose;
 						e.capacity -= choose;
 						Edge forward = e.originalEdge;
 						forward.capacity += choose;
+						forward.flow -= choose;
 						
 					}
 					
