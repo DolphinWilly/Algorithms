@@ -93,9 +93,90 @@ public class FrameworkFlow
 	public FrameworkFlow(String []Args)
 	{
 		input(Args[0]);
-
-		//YOUR CODE GOES HERE
 		
+		//YOUR CODE GOES HERE
+		ArrayList<ArrayList<Edge>> aj = new ArrayList<ArrayList<Edge>>();
+		for(int i = 0; i<n; i++) {
+			ArrayList<Edge> a = new ArrayList<Edge>();
+			for(Edge e: adjacencyList[i]) {
+				e.isForwardEdge = true;
+				Edge backward = new Edge(e.headNode,e.tailNode,0);
+				backward.isForwardEdge = false;
+				backward.originalEdge = e;
+				e.originalEdge = backward; // initialize the "originalEdge" of forward edge to be its potential backward
+				a.add(e);
+			}
+			aj.add(a);
+		}
+		boolean hasPath = true;
+		while(hasPath) {
+			//Stack<Map.Entry<Integer, Integer>> path = new Stack<Map.Entry<Integer, Integer>>();
+			// why don't we just save the edge?
+			ArrayList<Edge> gPath = new ArrayList<Edge>();
+			Stack<Integer> process = new Stack<Integer>();
+			process.push(s);
+			boolean marked[] = new boolean[n];
+			marked[s] = true;
+			while(true) {
+				if(process.isEmpty()) {
+					hasPath = false;
+					System.out.println("no path");
+					break;
+				} else {
+					int next = process.pop();
+					for(Edge e: aj.get(next)) {
+						if(!marked[e.headNode] && e.capacity >0) {
+							marked[e.headNode] = true;
+							process.push(e.headNode);
+							//path.push(new AbstractMap.SimpleEntry(next, e.headNode));
+							gPath.add(e);
+							System.out.println("saved path: "+e.tailNode+ " "+e.headNode );
+							if(e.headNode == t) 
+								break;						
+						}
+					}
+					if(marked[t])
+						break;
+				}
+			} // end of finding path from s to t
+			System.out.println("found path");
+			if(hasPath) {
+				ArrayList<Edge> ePath = new ArrayList<Edge>();
+				int look = t;
+				int choose = Integer.MAX_VALUE;
+				for(int j = gPath.size()-1; j>=0; j--) {
+					//Map.Entry<Integer, Integer> m = path.pop();
+					Edge e = gPath.get(j);
+					//if(m.getValue() == look) 
+					if(e.headNode == look) {
+						look = e.tailNode;
+						ePath.add(e);
+						choose = choose > e.capacity? e.capacity : choose;
+					}
+				}
+				// now we have the min flow vector value on the path and the whole path
+				// update the flow; update the capacity
+				for(Edge e: ePath) {
+					if(e.isForwardEdge) {
+						e.flow += choose;
+						e.capacity -= choose;
+						Edge back = e.originalEdge;
+						back.capacity += choose;
+						ArrayList<Edge> add = aj.get(back.tailNode);
+						add.add(back);
+					} else { // e is backward edge
+						e.flow -= choose;
+						e.capacity -= choose;
+						Edge forward = e.originalEdge;
+						forward.capacity += choose;
+						
+					}
+					
+					
+				}
+				
+			} // else !hasPath end of the loop: flow and Graph has been updated
+		}
 		
 		//END OF YOUR CODE
 
