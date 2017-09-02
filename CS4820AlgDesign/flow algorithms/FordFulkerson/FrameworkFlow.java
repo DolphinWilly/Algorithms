@@ -120,7 +120,7 @@ public class FrameworkFlow
 			while(true) {
 				if(process.isEmpty()) {
 					hasPath = false;
-					System.out.println("no path");
+					//System.out.println("no path");
 					break;
 				} else {
 					int next = process.pop();
@@ -130,7 +130,7 @@ public class FrameworkFlow
 							process.push(e.headNode);
 							//path.push(new AbstractMap.SimpleEntry(next, e.headNode));
 							gPath.add(e);
-							System.out.println("saved path: "+e.tailNode+ " "+e.headNode );
+							//System.out.println("saved path: "+e.tailNode+ " "+e.headNode );
 							if(e.headNode == t) 
 								break;						
 						}
@@ -139,7 +139,7 @@ public class FrameworkFlow
 						break;
 				}
 			} // end of finding path from s to t
-			System.out.println("found path");
+			//System.out.println("found path");
 			if(hasPath) {
 				ArrayList<Edge> ePath = new ArrayList<Edge>();
 				int look = t;
@@ -163,7 +163,7 @@ public class FrameworkFlow
 						Edge back = e.originalEdge;
 						back.capacity += choose;
 						ArrayList<Edge> add = aj.get(back.tailNode);
-						System.out.println(add.contains(back));
+						//System.out.println(add.contains(back));
 						if(!add.contains(back)) {
 							add.add(back);
 						}
