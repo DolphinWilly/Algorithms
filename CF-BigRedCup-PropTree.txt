@@ -1,0 +1,3 @@
+n number of nodes in the tree (node index from 1 to n with index 1 as root of the tree)
+m number of queries
+one line of n integers in range [1,1000] as value for each node
