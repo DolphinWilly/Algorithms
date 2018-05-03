@@ -1,3 +1,13 @@
 n number of nodes in the tree (node index from 1 to n with index 1 as root of the tree)
 m number of queries
 one line of n integers in range [1,1000] as value for each node
+n-1 lines of integer pairs (u,v) meaning an edge between node with index u and index v
+m lines of queries with them format:
+
+query := 1 i val  (type 1 query, adding val to node with index i)
+      |  2 i      (type 2 query, asking the current value on node with index i)
+
+propagating property:
+    whenever a value val is added to a node (in type 1 query), we will add (-val) to all its
+    children. (and we will see the children of each children and add (-(-val))) to them and
+    so on until leaf nodes.)
