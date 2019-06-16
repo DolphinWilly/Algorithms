@@ -4,7 +4,7 @@ a repository containing all important algorithms detailedly implemented and expl
 
 content
 
-1. CS4820 (CodeForces/CF-BigRedCup-PropTree.txt)
+1. CS4820
 1) self pre-study
 
 2. Random Algo Problems
